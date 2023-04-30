@@ -141,82 +141,82 @@
 #
 
 
-
-import telebot
-import random
-
-bot = telebot.TeleBot('5926623824:AAGkmuLaRKdO8KsIgqtL1NbiVjbBeNV8Fek')
-
-games = ["21", "крестики-нолики", "лото"]
-
-@bot.message_handler(commands=['start'])
-def start(message):
-    bot.send_message(message.chat.id, 'Привет! Я бот для выбора игры. Напиши /game, чтобы получить случайную игру из списка.')
-
-@bot.message_handler(commands=['game'])
-def game(message):
-    game = random.choice(games)
-    bot.send_message(message.chat.id, f"Сегодня ты будешь играть в: {game},напишии /play если тебе выпало 21 или /start_game если у тебя выпало лото")
-@bot.message_handler(commands=['play'])
-def play(message):
-    bot.send_message(message.chat.id, 'Начинаем игру в "21"!')
-    player_cards = [random.randint(2, 11) for _ in range(2)]
-    dealer_card = random.randint(2, 11)
-    bot.send_message(message.chat.id, f'Твои карты: {player_cards}. Сумма очков: {sum(player_cards)}')
-    bot.send_message(message.chat.id, f'Карта дилера: {dealer_card}')
-    if sum(player_cards) < 21:
-        message = bot.send_message(message.chat.id, 'Хочешь взять еще одну карту? (да/нет)')
-        bot.register_next_step_handler(message, hit_me, player_cards=player_cards, dealer_card=dealer_card)
-
-@bot.message_handler(commands=['start_game'])
-def q(message):
-    if "лото" in games:
-        bot.send_message(message.chat.id, 'Начинаем игру в лото!')
-        card = random.sample(range(1, 91), 15)
-        card.sort()
-        bot.register_next_step_handler(bot.send_message(message.chat.id, 'Хочешь продолжить игру? (да/нет)'), process_answer, card=card)
-    else:
-        bot.send_message(message.chat.id, 'К сожалению, игра в лото недоступна. Попробуйте выбрать другую игру.')
-
-def process_answer(message, card):
-    answer = message.text.lower()
-    if answer == 'да':
-        number = random.randint(1, 90)
-        bot.send_message(message.chat.id, f'Выпало число {number}!')
-        if number in card:
-            card.remove(number)
-            bot.send_message(message.chat.id, 'Ты отметил это число на твоей карте лото!')
-            if len(card) == 0:
-                bot.send_message(message.chat.id, 'Поздравляем, ты выиграл! Ты заполнил всю свою карту лото.')
-                bot.send_message(message.chat.id, 'Напиши /restart, чтобы начать игру заново.')
-            else:
-                bot.register_next_step_handler(bot.send_message(message.chat.id, 'Хочешь продолжить игру? (да/нет)'), process_answer, card=card)
-        else:
-            bot.send_message(message.chat.id, 'Это число не на твоей карте лото.')
-            bot.register_next_step_handler(bot.send_message(message.chat.id, 'Хочешь продолжить игру? (да/нет)'), process_answer, card=card)
-    elif answer == 'нет':
-        bot.send_message(message.chat.id, 'Хорошо, игра окончена.')
-    else:
-        bot.send_message(message.chat.id, 'Я не понимаю, ты хочешь продолжить игру или нет?')
-        bot.register_next_step_handler(bot.send_message(message.chat.id, 'Хочешь продолжить игру? (да/нет)'), process_answer, card=card)
-
-def hit_me(message, player_cards, dealer_card):
-    if message.text == 'да':
-        player_cards.append(random.randint(2, 11))
-        bot.send_message(message.chat.id, f'Твои карты: {player_cards}. Сумма очков: {sum(player_cards)}')
-        bot.send_message(message.chat.id, f'Карта дилера: {dealer_card}')
-        if sum(player_cards) >= 21:
-            bot.send_message(message.chat.id, 'Игра окончена!')
-            return
-        message = bot.send_message(message.chat.id, 'Хочешь взять еще одну карту? (да/нет)')
-        bot.register_next_step_handler(message, hit_me, player_cards=player_cards, dealer_card=dealer_card)
-    elif message.text == 'нет':
-        while dealer_card < 17:
-            dealer_card += random.randint(2, 11)
-        bot.send_message(message.chat.id, f'Твои карты: {player_cards}. Сумма очков: {sum(player_cards)}')
-        bot.send_message(message.chat.id, f'Карты дилера: {dealer_card}. Сумма очков: {dealer_card}')
-        if sum(player_cards) > dealer_card or dealer_card > 21:
-            bot.send_message(message.chat.id, 'вы выиграли')
-        else:
-            bot.send_message(message.chat.id,'ты проиграл')
-bot.polling()
+#
+# import telebot
+# import random
+#
+# bot = telebot.TeleBot('5926623824:AAGkmuLaRKdO8KsIgqtL1NbiVjbBeNV8Fek')
+#
+# games = ["21", "крестики-нолики", "лото"]
+#
+# @bot.message_handler(commands=['start'])
+# def start(message):
+#     bot.send_message(message.chat.id, 'Привет! Я бот для выбора игры. Напиши /game, чтобы получить случайную игру из списка.')
+#
+# @bot.message_handler(commands=['game'])
+# def game(message):
+#     game = random.choice(games)
+#     bot.send_message(message.chat.id, f"Сегодня ты будешь играть в: {game},напишии /play если тебе выпало 21 или /start_game если у тебя выпало лото")
+# @bot.message_handler(commands=['play'])
+# def play(message):
+#     bot.send_message(message.chat.id, 'Начинаем игру в "21"!')
+#     player_cards = [random.randint(2, 11) for _ in range(2)]
+#     dealer_card = random.randint(2, 11)
+#     bot.send_message(message.chat.id, f'Твои карты: {player_cards}. Сумма очков: {sum(player_cards)}')
+#     bot.send_message(message.chat.id, f'Карта дилера: {dealer_card}')
+#     if sum(player_cards) < 21:
+#         message = bot.send_message(message.chat.id, 'Хочешь взять еще одну карту? (да/нет)')
+#         bot.register_next_step_handler(message, hit_me, player_cards=player_cards, dealer_card=dealer_card)
+#
+# @bot.message_handler(commands=['start_game'])
+# def q(message):
+#     if "лото" in games:
+#         bot.send_message(message.chat.id, 'Начинаем игру в лото!')
+#         card = random.sample(range(1, 91), 15)
+#         card.sort()
+#         bot.register_next_step_handler(bot.send_message(message.chat.id, 'Хочешь продолжить игру? (да/нет)'), process_answer, card=card)
+#     else:
+#         bot.send_message(message.chat.id, 'К сожалению, игра в лото недоступна. Попробуйте выбрать другую игру.')
+#
+# def process_answer(message, card):
+#     answer = message.text.lower()
+#     if answer == 'да':
+#         number = random.randint(1, 90)
+#         bot.send_message(message.chat.id, f'Выпало число {number}!')
+#         if number in card:
+#             card.remove(number)
+#             bot.send_message(message.chat.id, 'Ты отметил это число на твоей карте лото!')
+#             if len(card) == 0:
+#                 bot.send_message(message.chat.id, 'Поздравляем, ты выиграл! Ты заполнил всю свою карту лото.')
+#                 bot.send_message(message.chat.id, 'Напиши /restart, чтобы начать игру заново.')
+#             else:
+#                 bot.register_next_step_handler(bot.send_message(message.chat.id, 'Хочешь продолжить игру? (да/нет)'), process_answer, card=card)
+#         else:
+#             bot.send_message(message.chat.id, 'Это число не на твоей карте лото.')
+#             bot.register_next_step_handler(bot.send_message(message.chat.id, 'Хочешь продолжить игру? (да/нет)'), process_answer, card=card)
+#     elif answer == 'нет':
+#         bot.send_message(message.chat.id, 'Хорошо, игра окончена.')
+#     else:
+#         bot.send_message(message.chat.id, 'Я не понимаю, ты хочешь продолжить игру или нет?')
+#         bot.register_next_step_handler(bot.send_message(message.chat.id, 'Хочешь продолжить игру? (да/нет)'), process_answer, card=card)
+#
+# def hit_me(message, player_cards, dealer_card):
+#     if message.text == 'да':
+#         player_cards.append(random.randint(2, 11))
+#         bot.send_message(message.chat.id, f'Твои карты: {player_cards}. Сумма очков: {sum(player_cards)}')
+#         bot.send_message(message.chat.id, f'Карта дилера: {dealer_card}')
+#         if sum(player_cards) >= 21:
+#             bot.send_message(message.chat.id, 'Игра окончена!')
+#             return
+#         message = bot.send_message(message.chat.id, 'Хочешь взять еще одну карту? (да/нет)')
+#         bot.register_next_step_handler(message, hit_me, player_cards=player_cards, dealer_card=dealer_card)
+#     elif message.text == 'нет':
+#         while dealer_card < 17:
+#             dealer_card += random.randint(2, 11)
+#         bot.send_message(message.chat.id, f'Твои карты: {player_cards}. Сумма очков: {sum(player_cards)}')
+#         bot.send_message(message.chat.id, f'Карты дилера: {dealer_card}. Сумма очков: {dealer_card}')
+#         if sum(player_cards) > dealer_card or dealer_card > 21:
+#             bot.send_message(message.chat.id, 'вы выиграли')
+#         else:
+#             bot.send_message(message.chat.id,'ты проиграл')
+# bot.polling()
